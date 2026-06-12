@@ -1,0 +1,66 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,400;0,9..144,600;0,9..144,700;1,9..144,400&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --color-cream: #FAFAF8;
+  --color-charcoal: #1A1A1A;
+  --color-navy: #1B3A6B;
+  --color-navy-light: #2a4f8f;
+  --color-amber: #F5A623;
+  --color-amber-light: #FDB944;
+  --color-surface: #FFFFFF;
+  --color-border: #E8E8E4;
+  --color-muted: #6B6B65;
+  --color-muted-light: #9B9B93;
+  --color-green: #2E7D5B;
+  --color-green-bg: #EAF5EF;
+  --color-red: #C0392B;
+  --color-red-bg: #FDECEA;
+  --color-amber-bg: #FEF6E8;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body, #root {
+  height: 100%;
+}
+
+body {
+  background-color: #FAFAF8;
+  color: #1A1A1A;
+  font-family: 'DM Sans', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Fraunces', serif;
+  font-weight: 600;
+  color: #1A1A1A;
+}
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D8D8D2;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #B8B8B0;
+}
+
+input, textarea, select, button {
+  font-family: 'DM Sans', sans-serif;
+}

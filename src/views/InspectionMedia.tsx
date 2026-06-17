@@ -1,11 +1,13 @@
 import React, { useState, useMemo } from 'react';
 import MediaCard from '../components/MediaCard';
 import MediaDetail from '../components/MediaDetail';
-import type { MediaItem, FindingTag } from '../types/inspection';
+import type { HomeSummary, MediaItem, FindingTag } from '../types/inspection';
 
 interface Props {
+  home: HomeSummary;
   media: MediaItem[];
   rooms: { id: string; name: string }[];
+  onBackToHomes: () => void;
   onUpdateItem: (id: string, updates: Partial<Pick<MediaItem, 'finding' | 'severity' | 'notes' | 'addedToReport' | 'roomId' | 'roomName'>>) => void;
   onDeleteItem: (id: string) => void;
 }
@@ -23,7 +25,7 @@ const FINDING_TAGS: { value: FindingTag | 'All'; label: string }[] = [
 const SEVERITY_ORDER: Record<string, number> = { High: 0, Medium: 1, Low: 2, None: 3 };
 const ROOM_ORDER = ['Living Room', 'Kitchen', 'Master Bedroom', 'Bedroom 2', 'Bathroom', 'Hallway'];
 
-export default function InspectionMedia({ media, rooms, onUpdateItem, onDeleteItem }: Props) {
+export default function InspectionMedia({ home, media, rooms, onBackToHomes, onUpdateItem, onDeleteItem }: Props) {
   const [tab, setTab] = useState<Tab>('all');
   const [search, setSearch] = useState('');
   const [roomFilter, setRoomFilter] = useState('all');
@@ -69,11 +71,27 @@ export default function InspectionMedia({ media, rooms, onUpdateItem, onDeleteIt
     <div style={{ maxWidth: 1280, margin: '0 auto', padding: 24, position: 'relative' }}>
       {/* Page header */}
       <div style={{ marginBottom: 20 }}>
+        <button
+          onClick={onBackToHomes}
+          style={{
+            marginBottom: 12,
+            background: '#FFFFFF',
+            border: '1px solid #E8E8E4',
+            borderRadius: 999,
+            padding: '7px 12px',
+            fontSize: 12,
+            color: '#1A1A1A',
+            fontFamily: 'DM Sans, sans-serif',
+            cursor: 'pointer',
+          }}
+        >
+          ← Back to Homes
+        </button>
         <h2 style={{ fontSize: 24, fontWeight: 600, fontFamily: 'Fraunces, serif', color: '#1A1A1A', marginBottom: 4 }}>
           Inspection Media
         </h2>
         <p style={{ fontSize: 13, color: '#9B9B93', fontFamily: 'DM Sans, sans-serif' }}>
-          142 Elmwood Drive, Summit, NJ · {media.length} items · {media.filter(m => m.finding === 'Flagged').length} flagged
+          {home.address} · {media.length} items · {media.filter(m => m.finding === 'Flagged').length} flagged
         </p>
       </div>
 

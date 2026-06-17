@@ -2,6 +2,12 @@ export type FindingTag = 'Clear' | 'Needs Attention' | 'Flagged';
 export type Severity = 'None' | 'Low' | 'Medium' | 'High';
 export type MediaType = 'photo' | 'video';
 
+export interface HomeSummary {
+  id: string;
+  address: string;
+  photoUrl: string;
+}
+
 export interface MediaItem {
   id: string;
   roomId: string;

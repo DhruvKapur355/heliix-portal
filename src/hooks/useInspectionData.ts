@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import type { MediaItem } from '../types/inspection';
+import type { HomeSummary, MediaItem } from '../types/inspection';
 import type { Report } from '../types/report';
 
 const ROOMS = [
@@ -203,6 +203,39 @@ const INITIAL_MEDIA: MediaItem[] = [
   },
 ];
 
+const HOME_LIST: HomeSummary[] = [
+  {
+    id: 'elmwood',
+    address: '142 Elmwood Drive, Summit, NJ',
+    photoUrl: 'https://picsum.photos/seed/elmwood-home/900/600',
+  },
+  {
+    id: 'maple',
+    address: '88 Maple Court, Princeton, NJ',
+    photoUrl: 'https://picsum.photos/seed/maple-home/900/600',
+  },
+  {
+    id: 'birchwood',
+    address: '310 Birchwood Lane, Westfield, NJ',
+    photoUrl: 'https://picsum.photos/seed/birchwood-home/900/600',
+  },
+];
+
+function cloneMediaForHome(homeId: string, seedPrefix: string, offsetMinutes: number) {
+  return INITIAL_MEDIA.map((item, index) => ({
+    ...item,
+    id: `${homeId}-${item.id}`,
+    thumbnailUrl: `https://picsum.photos/seed/${seedPrefix}-${item.id}/400/300`,
+    capturedAt: makeDate(offsetMinutes + index),
+  }));
+}
+
+const MEDIA_BY_HOME: Record<string, MediaItem[]> = {
+  elmwood: INITIAL_MEDIA,
+  maple: cloneMediaForHome('maple', 'maple', 20),
+  birchwood: cloneMediaForHome('birchwood', 'birchwood', 40),
+};
+
 function buildRoomFindings(media: MediaItem[]) {
   return ROOMS.map((room) => {
     const items = media.filter(
@@ -271,19 +304,29 @@ const INITIAL_REPORTS: Report[] = [
 ];
 
 export function useInspectionData() {
-  const [media, setMedia] = useState<MediaItem[]>(INITIAL_MEDIA);
+  const [mediaByHomeId, setMediaByHomeId] = useState<Record<string, MediaItem[]>>(MEDIA_BY_HOME);
   const [reports, setReports] = useState<Report[]>(INITIAL_REPORTS);
   const [selectedReportId, setSelectedReportId] = useState<string>('r1');
 
   const updateMediaItem = useCallback(
-    (id: string, updates: Partial<Pick<MediaItem, 'finding' | 'severity' | 'notes' | 'addedToReport' | 'roomId' | 'roomName'>>) => {
-      setMedia((prev) => prev.map((m) => (m.id === id ? { ...m, ...updates } : m)));
+    (
+      homeId: string,
+      id: string,
+      updates: Partial<Pick<MediaItem, 'finding' | 'severity' | 'notes' | 'addedToReport' | 'roomId' | 'roomName'>>
+    ) => {
+      setMediaByHomeId((prev) => ({
+        ...prev,
+        [homeId]: (prev[homeId] ?? []).map((m) => (m.id === id ? { ...m, ...updates } : m)),
+      }));
     },
     []
   );
 
-  const deleteMediaItem = useCallback((id: string) => {
-    setMedia((prev) => prev.filter((m) => m.id !== id));
+  const deleteMediaItem = useCallback((homeId: string, id: string) => {
+    setMediaByHomeId((prev) => ({
+      ...prev,
+      [homeId]: (prev[homeId] ?? []).filter((m) => m.id !== id),
+    }));
   }, []);
 
   const generateReport = useCallback((reportId: string) => {
@@ -295,7 +338,8 @@ export function useInspectionData() {
   const selectedReport = reports.find((r) => r.id === selectedReportId) ?? reports[0];
 
   return {
-    media,
+    homes: HOME_LIST,
+    mediaByHomeId,
     rooms: ROOMS,
     reports,
     selectedReport,

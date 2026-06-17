@@ -1,11 +1,14 @@
 import React from 'react';
 import FloorPlan from '../components/FloorPlan';
 import EventLog from '../components/EventLog';
+import type { HomeSummary } from '../types/inspection';
 import type { DroneState, EventLogEntry, MissionState } from '../types/drone';
 
 interface Props {
+  home: HomeSummary;
   droneState: DroneState;
   events: EventLogEntry[];
+  onBackToHomes: () => void;
   onPause: () => void;
   onResume: () => void;
   onAbort: () => void;
@@ -39,7 +42,7 @@ function StatItem({ label, value }: { label: string; value: string }) {
   );
 }
 
-export default function LiveView({ droneState, events, onPause, onResume, onAbort, onReturn }: Props) {
+export default function LiveView({ home, droneState, events, onBackToHomes, onPause, onResume, onAbort, onReturn }: Props) {
   const badge = MISSION_BADGE[droneState.missionState];
   const isPaused = droneState.missionState === 'PAUSED';
   const isAborted = droneState.missionState === 'ABORTED' || droneState.missionState === 'RETURNING';
@@ -241,6 +244,31 @@ export default function LiveView({ droneState, events, onPause, onResume, onAbor
 
       {/* Event log */}
       <div style={{ maxWidth: 1280, width: '100%', margin: '0 auto', padding: '0 24px 24px' }}>
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+          <button
+            onClick={onBackToHomes}
+            style={{
+              background: '#FFFFFF',
+              border: '1px solid #E8E8E4',
+              borderRadius: 999,
+              padding: '8px 12px',
+              fontSize: 12,
+              color: '#1A1A1A',
+              fontFamily: 'DM Sans, sans-serif',
+              cursor: 'pointer',
+            }}
+          >
+            ← Back to Homes
+          </button>
+          <div style={{ textAlign: 'right' }}>
+            <div style={{ fontSize: 11, color: '#9B9B93', fontFamily: 'DM Sans, sans-serif', textTransform: 'uppercase', letterSpacing: '0.06em' }}>
+              Selected Home
+            </div>
+            <div style={{ fontSize: 14, color: '#1A1A1A', fontFamily: 'Fraunces, serif', fontWeight: 600 }}>
+              {home.address}
+            </div>
+          </div>
+        </div>
         <div style={{ borderRadius: 12, overflow: 'hidden', border: '1px solid #E8E8E4' }}>
           <EventLog events={events} />
         </div>

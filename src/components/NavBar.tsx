@@ -1,6 +1,6 @@
 import type { AuthUser } from '../hooks/useAuth';
 
-type NavItem = 'live' | 'media' | 'reports' | 'settings';
+type NavItem = 'homes' | 'live' | 'reports' | 'settings';
 
 interface Props {
   active: NavItem;
@@ -10,9 +10,9 @@ interface Props {
 }
 
 const NAV_ITEMS: { id: NavItem; label: string }[] = [
-  { id: 'live', label: 'Live View' },
-  { id: 'media', label: 'Inspection Media' },
+  { id: 'homes', label: 'Homes' },
   { id: 'reports', label: 'Reports' },
+  { id: 'live', label: 'Live View' },
   { id: 'settings', label: 'Settings' },
 ];
 
